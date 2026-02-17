@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function WeddingPreloader() {
   const [isVisible, setIsVisible] = useState(true);
-  const [showText, setShowText] = useState(false);
+  const [phase, setPhase] = useState<'atmosphere' | 'logo' | 'aperture' | 'closing'>('atmosphere');
 
   useEffect(() => {
     const hasLoaded = sessionStorage.getItem('vav_films_loaded');
@@ -13,289 +13,265 @@ export default function WeddingPreloader() {
       return;
     }
 
-    setTimeout(() => setShowText(true), 1500);
+    document.body.style.overflow = 'hidden';
 
-    setTimeout(() => {
+    const atmosphereTimer = setTimeout(() => setPhase('logo'), 2500);
+    const logoTimer = setTimeout(() => setPhase('aperture'), 4000);
+    const apertureTimer = setTimeout(() => setPhase('closing'), 5500);
+
+    const closeTimer = setTimeout(() => {
       setIsVisible(false);
       sessionStorage.setItem('vav_films_loaded', 'true');
-    }, 4500);
+      document.body.style.overflow = '';
+    }, 6500);
+
+    return () => {
+      clearTimeout(atmosphereTimer);
+      clearTimeout(logoTimer);
+      clearTimeout(apertureTimer);
+      clearTimeout(closeTimer);
+      document.body.style.overflow = '';
+    };
   }, []);
 
   if (!isVisible) return null;
 
-  const text = "VAV FILMS";
+  const text = "VAV FILM";
 
   return (
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.8 }}
-        className="fixed inset-0 z-[9999] bg-gradient-to-b from-[#0D0A07] to-[#1A1208] flex items-center justify-center overflow-hidden"
+        transition={{ duration: 0.8, ease: 'easeInOut' }}
+        className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
       >
-        {[...Array(30)].map((_, i) => {
-          const delay = Math.random() * 2;
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.15 }}
+          transition={{ duration: 2, delay: 1 }}
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(212, 175, 55, 0.1) 0%, transparent 70%)'
+          }}
+        />
+
+        {[...Array(50)].map((_, i) => {
+          const delay = 1 + Math.random() * 1.5;
           const duration = 3 + Math.random() * 2;
           const startX = Math.random() * 100;
-          const drift = (Math.random() - 0.5) * 30;
+          const startY = Math.random() * 100;
+          const driftX = (Math.random() - 0.5) * 20;
+          const driftY = (Math.random() - 0.5) * 20;
+          const size = 1 + Math.random() * 2;
 
           return (
             <motion.div
-              key={`marigold-${i}`}
+              key={`dust-${i}`}
               initial={{
-                y: -50,
                 x: `${startX}vw`,
+                y: `${startY}vh`,
                 opacity: 0,
-                rotate: 0,
-                scale: 0.5
+                scale: 0
               }}
               animate={{
-                y: '110vh',
-                x: `${startX + drift}vw`,
-                opacity: [0, 1, 1, 1, 0],
-                rotate: [0, 180, 360, 540, 720],
-                scale: [0.5, 1, 1, 1, 0.5]
+                x: `${startX + driftX}vw`,
+                y: `${startY + driftY}vh`,
+                opacity: [0, 0.6, 0.4, 0],
+                scale: [0, 1, 1, 0]
               }}
               transition={{
                 duration: duration,
                 delay: delay,
-                ease: 'linear',
+                ease: 'easeInOut',
                 repeat: Infinity,
-                repeatDelay: Math.random() * 1
+                repeatDelay: Math.random() * 2
               }}
-              className="absolute"
-            >
-              <svg width="20" height="20" viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="6" fill="#E8721C" />
-                {[...Array(8)].map((_, petalIndex) => {
-                  const angle = (petalIndex * 45 * Math.PI) / 180;
-                  const x = 20 + Math.cos(angle) * 8;
-                  const y = 20 + Math.sin(angle) * 8;
-                  return (
-                    <ellipse
-                      key={petalIndex}
-                      cx={x}
-                      cy={y}
-                      rx="4"
-                      ry="8"
-                      fill="#D4A843"
-                      transform={`rotate(${petalIndex * 45} ${x} ${y})`}
-                    />
-                  );
-                })}
-              </svg>
-            </motion.div>
+              className="absolute rounded-full"
+              style={{
+                width: `${size}px`,
+                height: `${size}px`,
+                background: '#D4AF37',
+                boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
+                filter: 'blur(0.5px)'
+              }}
+            />
           );
         })}
 
-        <svg
-          width="500"
-          height="500"
-          viewBox="0 0 500 500"
-          className="absolute opacity-30"
+        <motion.div
+          className="relative z-10 flex flex-col items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: phase === 'atmosphere' ? 0 : 1 }}
+          transition={{ duration: 1, delay: 2.5 }}
         >
-          <defs>
-            <linearGradient id="mandalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#D4A843" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#E8721C" stopOpacity="0.6" />
-            </linearGradient>
-          </defs>
-
-          <motion.g
-            initial={{ rotate: 0, scale: 0, opacity: 0 }}
-            animate={{ rotate: 360, scale: 1, opacity: 1 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
+          <motion.div
+            initial={{ letterSpacing: '0em', opacity: 0 }}
+            animate={{
+              letterSpacing: phase === 'closing' ? '0em' : '0.3em',
+              opacity: phase === 'closing' ? 0 : 1
+            }}
+            transition={{ duration: 1.5, ease: 'easeOut' }}
+            className="relative"
           >
-            {[...Array(12)].map((_, i) => {
-              const angle = (i * 30 * Math.PI) / 180;
-              const x1 = 250;
-              const y1 = 250;
-              const x2 = 250 + Math.cos(angle) * 150;
-              const y2 = 250 + Math.sin(angle) * 150;
-
-              return (
-                <motion.g key={i}>
-                  <motion.path
-                    d={`M ${x1} ${y1} Q ${250 + Math.cos(angle) * 100} ${250 + Math.sin(angle) * 100} ${x2} ${y2}`}
-                    stroke="url(#mandalGrad)"
-                    strokeWidth="2"
-                    fill="none"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1.5, delay: 0.5 + i * 0.05 }}
-                  />
-                  <motion.circle
-                    cx={x2}
-                    cy={y2}
-                    r="8"
-                    fill="#E8721C"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: [0, 1.2, 1] }}
-                    transition={{ duration: 0.4, delay: 2 + i * 0.05 }}
-                  />
-                </motion.g>
-              );
-            })}
-          </motion.g>
-
-          <motion.circle
-            cx="250"
-            cy="250"
-            r="50"
-            fill="none"
-            stroke="#D4A843"
-            strokeWidth="3"
-            strokeDasharray="314"
-            strokeDashoffset="314"
-            animate={{ strokeDashoffset: 0 }}
-            transition={{ duration: 2, delay: 0.5 }}
-          />
-
-          <motion.circle
-            cx="250"
-            cy="250"
-            r="30"
-            fill="#C4687A"
-            initial={{ scale: 0 }}
-            animate={{ scale: [0, 1.3, 1], rotate: 360 }}
-            transition={{ duration: 1, delay: 2.5 }}
-          />
-        </svg>
-
-        {[...Array(6)].map((_, i) => {
-          const positions = [
-            { top: '10%', left: '10%' },
-            { top: '10%', right: '10%' },
-            { top: '50%', left: '5%' },
-            { top: '50%', right: '5%' },
-            { bottom: '10%', left: '10%' },
-            { bottom: '10%', right: '10%' },
-          ];
-
-          return (
-            <motion.div
-              key={`diya-${i}`}
-              className="absolute"
-              style={positions[i]}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{
-                opacity: [0, 1, 1, 1],
-                scale: [0, 1.1, 1, 1],
-              }}
-              transition={{
-                duration: 1,
-                delay: 1 + i * 0.2,
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold text-[#D4AF37] relative"
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                textShadow: '0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.3)'
               }}
             >
-              <motion.svg
-                width="40"
-                height="50"
-                viewBox="0 0 40 50"
-                animate={{
-                  filter: [
-                    'drop-shadow(0 0 5px rgba(232, 114, 28, 0.8))',
-                    'drop-shadow(0 0 15px rgba(232, 114, 28, 1))',
-                    'drop-shadow(0 0 5px rgba(232, 114, 28, 0.8))'
-                  ]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: 'easeInOut'
-                }}
-              >
-                <ellipse cx="20" cy="35" rx="12" ry="5" fill="#D4A843" />
-                <path
-                  d="M 12 35 Q 12 30 12 28 L 28 28 Q 28 30 28 35 Z"
-                  fill="url(#diyaGrad)"
-                />
-                <motion.path
-                  d="M 20 20 Q 18 25 18 28 Q 18 30 20 32 Q 22 30 22 28 Q 22 25 20 20"
-                  fill="url(#flameGradient)"
-                  animate={{
-                    d: [
-                      'M 20 20 Q 18 25 18 28 Q 18 30 20 32 Q 22 30 22 28 Q 22 25 20 20',
-                      'M 20 18 Q 17 24 17 28 Q 17 31 20 33 Q 23 31 23 28 Q 23 24 20 18',
-                      'M 20 20 Q 18 25 18 28 Q 18 30 20 32 Q 22 30 22 28 Q 22 25 20 20'
-                    ]
-                  }}
+              {text.split('').map((letter, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
+                    duration: 0.6,
+                    delay: 2.5 + i * 0.1,
+                    ease: 'easeOut'
                   }}
-                />
-                <defs>
-                  <linearGradient id="flameGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#E8721C" />
-                    <stop offset="50%" stopColor="#D4A843" />
-                    <stop offset="100%" stopColor="#E8721C" />
-                  </linearGradient>
-                  <linearGradient id="diyaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#D4A843" />
-                    <stop offset="100%" stopColor="#C9A96E" />
-                  </linearGradient>
-                </defs>
-              </motion.svg>
+                  className="inline-block"
+                >
+                  {letter === ' ' ? '\u00A0' : letter}
+                </motion.span>
+              ))}
+            </motion.h1>
+
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{
+                scaleX: phase === 'closing' ? 0 : 1,
+                opacity: phase === 'closing' ? 0 : 1
+              }}
+              transition={{ duration: 0.8, delay: 3.5 }}
+              className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full"
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0.7, 1, 0] }}
+                transition={{ duration: 2, delay: 3.5 }}
+                className="w-px h-16 bg-gradient-to-b from-transparent via-[#D4AF37] to-transparent mx-auto"
+              />
             </motion.div>
-          );
-        })}
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+              opacity: phase === 'closing' ? 0 : 1,
+              y: phase === 'closing' ? -10 : 0
+            }}
+            transition={{ duration: 1, delay: 3.8 }}
+            className="text-[#D4AF37] text-xs md:text-sm tracking-[0.4em] uppercase mt-24"
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 300,
+              textShadow: '0 0 20px rgba(212, 175, 55, 0.4)'
+            }}
+          >
+            Wedding Stories. Cinematically Captured.
+          </motion.p>
+        </motion.div>
 
         <AnimatePresence>
-          {showText && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
-              className="absolute flex flex-col items-center z-10"
+          {phase === 'aperture' && (
+            <motion.svg
+              width="600"
+              height="600"
+              viewBox="0 0 600 600"
+              className="absolute pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <motion.h1
-                className="text-5xl md:text-7xl font-bold tracking-[0.3em] text-[#F5ECD7] mb-4"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
-              >
-                {text.split('').map((letter, i) => (
-                  <motion.span
+              <defs>
+                <linearGradient id="apertureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.4" />
+                </linearGradient>
+              </defs>
+
+              {[...Array(8)].map((_, i) => {
+                const angle = (i * 45 * Math.PI) / 180;
+                const outerRadius = 250;
+                const innerRadius = 150;
+
+                const x1 = 300 + Math.cos(angle) * innerRadius;
+                const y1 = 300 + Math.sin(angle) * innerRadius;
+                const x2 = 300 + Math.cos(angle + 0.3) * outerRadius;
+                const y2 = 300 + Math.sin(angle + 0.3) * outerRadius;
+                const x3 = 300 + Math.cos(angle + 0.785) * outerRadius;
+                const y3 = 300 + Math.sin(angle + 0.785) * outerRadius;
+                const x4 = 300 + Math.cos(angle + 0.485) * innerRadius;
+                const y4 = 300 + Math.sin(angle + 0.485) * innerRadius;
+
+                return (
+                  <motion.path
                     key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2, delay: i * 0.1 }}
-                    className="inline-block"
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </motion.h1>
+                    d={`M ${x1} ${y1} L ${x2} ${y2} L ${x3} ${y3} L ${x4} ${y4} Z`}
+                    fill="url(#apertureGrad)"
+                    initial={{ opacity: 0, scale: 1.5 }}
+                    animate={{ opacity: 0.6, scale: 1 }}
+                    transition={{ duration: 0.8, delay: i * 0.05, ease: 'easeOut' }}
+                    style={{
+                      transformOrigin: '300px 300px'
+                    }}
+                  />
+                );
+              })}
 
+              <motion.circle
+                cx="300"
+                cy="300"
+                r="140"
+                fill="none"
+                stroke="#D4AF37"
+                strokeWidth="2"
+                initial={{ strokeDasharray: '880', strokeDashoffset: '880' }}
+                animate={{ strokeDashoffset: 0 }}
+                transition={{ duration: 1.5, ease: 'easeInOut' }}
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.6))'
+                }}
+              />
+            </motion.svg>
+          )}
+
+          {phase === 'closing' && (
+            <motion.div
+              initial={{ scale: 1, opacity: 1 }}
+              animate={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 1, ease: 'easeIn' }}
+              className="absolute inset-0 bg-black"
+              style={{
+                clipPath: 'circle(100% at 50% 50%)'
+              }}
+            >
               <motion.div
-                initial={{ opacity: 0, scaleX: 0 }}
-                animate={{ opacity: 1, scaleX: 1 }}
-                transition={{ duration: 0.8, delay: 0.9 }}
-                className="flex items-center gap-3 mb-3"
-              >
-                <div className="w-12 h-px bg-[#D4A843]" />
-                <motion.span
-                  className="text-[#D4A843] text-2xl"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                >
-                  ✦
-                </motion.span>
-                <div className="w-12 h-px bg-[#D4A843]" />
-              </motion.div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.4 }}
-                className="text-[#F5ECD7] text-sm md:text-base tracking-widest text-center px-4"
-                style={{ fontFamily: "'Montserrat', sans-serif" }}
-              >
-                WHERE EVERY LOVE STORY BECOMES LEGEND
-              </motion.p>
+                animate={{
+                  clipPath: [
+                    'circle(100% at 50% 50%)',
+                    'circle(0% at 50% 50%)'
+                  ]
+                }}
+                transition={{ duration: 1, ease: 'easeIn' }}
+                className="absolute inset-0 bg-black"
+              />
             </motion.div>
           )}
         </AnimatePresence>
+
+        <motion.div
+          initial={{ x: '-100%' }}
+          animate={{ x: phase === 'logo' ? '100%' : '-100%' }}
+          transition={{ duration: 1.5, delay: 3, ease: 'easeInOut' }}
+          className="absolute inset-y-0 left-0 w-full pointer-events-none"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.3) 50%, transparent 100%)',
+            filter: 'blur(40px)'
+          }}
+        />
       </motion.div>
     </AnimatePresence>
   );
