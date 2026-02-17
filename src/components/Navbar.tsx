@@ -18,7 +18,13 @@ export default function Navbar() {
       : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.98)']
   );
 
-  const borderOpacity = useTransform(scrollY, [0, 100], [0, 0.1]);
+  const boxShadow = useTransform(
+    scrollY,
+    [0, 100],
+    theme === 'dark'
+      ? ['0 0 0 rgba(0,0,0,0)', '0 2px 20px rgba(0,0,0,0.3)']
+      : ['0 0 0 rgba(0,0,0,0)', '0 2px 20px rgba(0,0,0,0.08)']
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -40,13 +46,9 @@ export default function Navbar() {
 
   return (
     <motion.nav
-      style={{ backgroundColor }}
+      style={{ backgroundColor, boxShadow }}
       className="fixed w-full z-50 backdrop-blur-xl"
     >
-      <motion.div
-        style={{ opacity: borderOpacity }}
-        className="absolute bottom-0 left-0 right-0 h-px bg-white"
-      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
@@ -62,7 +64,7 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
             />
             <div className="flex flex-col">
-              <span className="font-['Playfair_Display'] text-2xl font-bold text-white dark:text-white">
+              <span className="font-['Playfair_Display'] text-2xl font-bold text-[#1A1410] dark:text-white">
                 VAV Films
               </span>
               <span className="text-xs text-[#C9A96E] tracking-widest">
@@ -77,7 +79,7 @@ export default function Navbar() {
                 key={link.path}
                 to={link.path}
                 onClick={() => window.scrollTo(0, 0)}
-                className={`relative text-white dark:text-white font-medium transition-colors hover:text-[#C9A96E] ${
+                className={`relative text-[#1A1410] dark:text-white font-medium transition-colors hover:text-[#C9A96E] ${
                   location.pathname === link.path ? 'text-[#C9A96E]' : ''
                 }`}
               >
@@ -93,15 +95,15 @@ export default function Navbar() {
 
             <a
               href="tel:+61412345678"
-              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-white font-semibold rounded-full hover:scale-105 transition-transform"
+              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-[#1A1410] font-semibold rounded-full hover:scale-105 transition-transform shadow-lg"
             >
               <Phone className="w-4 h-4" />
-              Call Now
+              Book Your Date
             </a>
 
             <button
               onClick={toggleTheme}
-              className="p-2 text-white dark:text-white hover:text-[#C9A96E] transition-colors rounded-full hover:bg-white/10"
+              className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E] transition-colors rounded-full hover:bg-black/5 dark:hover:bg-white/10"
             >
               {theme === 'dark' ? (
                 <Sun className="w-5 h-5" />
@@ -114,7 +116,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center gap-4">
             <button
               onClick={toggleTheme}
-              className="p-2 text-white dark:text-white hover:text-[#C9A96E] transition-colors"
+              className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E] transition-colors"
             >
               {theme === 'dark' ? (
                 <Sun className="w-5 h-5" />
@@ -125,7 +127,7 @@ export default function Navbar() {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-white dark:text-white"
+              className="p-2 text-[#1A1410] dark:text-white"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -151,15 +153,15 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="absolute inset-y-0 right-0 w-full max-w-sm bg-[#0A0A0A] dark:bg-[#0A0A0A]"
+              className="absolute inset-y-0 right-0 w-full max-w-sm bg-white dark:bg-[#0A0A0A]"
             >
-              <div className="flex items-center justify-between p-6 border-b border-white/10">
-                <span className="font-['Playfair_Display'] text-xl font-bold text-white">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-white/10">
+                <span className="font-['Playfair_Display'] text-xl font-bold text-[#1A1410] dark:text-white">
                   Menu
                 </span>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-white hover:text-[#C9A96E]"
+                  className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E]"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -177,7 +179,7 @@ export default function Navbar() {
                     className={`block text-xl font-medium transition-colors ${
                       location.pathname === link.path
                         ? 'text-[#C9A96E]'
-                        : 'text-white hover:text-[#C9A96E]'
+                        : 'text-[#1A1410] dark:text-white hover:text-[#C9A96E]'
                     }`}
                   >
                     {link.name}
@@ -186,10 +188,10 @@ export default function Navbar() {
 
                 <a
                   href="tel:+61412345678"
-                  className="flex items-center justify-center gap-2 w-full px-6 py-4 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-white font-semibold rounded-full mt-8"
+                  className="flex items-center justify-center gap-2 w-full px-6 py-4 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-[#1A1410] font-semibold rounded-full mt-8 shadow-lg"
                 >
                   <Phone className="w-5 h-5" />
-                  Call Now
+                  Book Your Date
                 </a>
               </div>
             </motion.div>

@@ -87,7 +87,7 @@ export default function PortfolioGrid({ onImageClick }: PortfolioGridProps) {
   };
 
   return (
-    <section id="portfolio" ref={ref} className="py-20 bg-[#0A0A0A] dark:bg-[#0A0A0A]">
+    <section id="portfolio" ref={ref} className="py-20 bg-white dark:bg-[#0A0A0A]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -95,10 +95,10 @@ export default function PortfolioGrid({ onImageClick }: PortfolioGridProps) {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-white mb-4">
+          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-[#1A1410] dark:text-white mb-4">
             Our Portfolio
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
             Every frame tells a story of love, laughter, and unforgettable moments
           </p>
         </motion.div>

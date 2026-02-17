@@ -5,6 +5,7 @@ import PackagesSection from '../components/PackagesSection';
 import Testimonials from '../components/Testimonials';
 import UrgencySection from '../components/UrgencySection';
 import Lightbox from '../components/Lightbox';
+import DecorativeDivider from '../components/DecorativeDivider';
 
 interface PortfolioImage {
   id: number;
@@ -20,9 +21,13 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Hero />
+      <DecorativeDivider />
       <PortfolioGrid onImageClick={setSelectedImage} />
+      <DecorativeDivider />
       <PackagesSection />
+      <DecorativeDivider />
       <Testimonials />
+      <DecorativeDivider />
       <UrgencySection />
       <Lightbox
         image={selectedImage}

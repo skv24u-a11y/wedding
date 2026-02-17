@@ -20,23 +20,61 @@ export default function ParticleBackground() {
       speedX: number;
       speedY: number;
       opacity: number;
+      type: 'circle' | 'petal';
+      color: string;
+      rotation: number;
+      rotationSpeed: number;
     }> = [];
 
     const particleCount = 50;
-    const goldColor = 'rgba(201, 169, 110, ';
 
     for (let i = 0; i < particleCount; i++) {
+      const isPetal = Math.random() > 0.6;
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1,
+        size: isPetal ? Math.random() * 6 + 3 : Math.random() * 3 + 1,
         speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
+        speedY: isPetal ? Math.random() * 0.3 - 0.5 : (Math.random() - 0.5) * 0.5,
         opacity: Math.random() * 0.5 + 0.2,
+        type: isPetal ? 'petal' : 'circle',
+        color: isPetal
+          ? (Math.random() > 0.5 ? 'rgba(255, 153, 51, ' : 'rgba(201, 169, 110, ')
+          : 'rgba(201, 169, 110, ',
+        rotation: Math.random() * 360,
+        rotationSpeed: (Math.random() - 0.5) * 2,
       });
     }
 
     let animationFrameId: number;
+
+    function drawPetal(
+      x: number,
+      y: number,
+      size: number,
+      rotation: number,
+      color: string,
+      opacity: number
+    ) {
+      if (!ctx) return;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((rotation * Math.PI) / 180);
+
+      ctx.beginPath();
+      ctx.moveTo(0, -size);
+      ctx.quadraticCurveTo(size * 0.7, -size * 0.5, size * 0.5, 0);
+      ctx.quadraticCurveTo(size * 0.7, size * 0.5, 0, size);
+      ctx.quadraticCurveTo(-size * 0.7, size * 0.5, -size * 0.5, 0);
+      ctx.quadraticCurveTo(-size * 0.7, -size * 0.5, 0, -size);
+      ctx.closePath();
+
+      ctx.fillStyle = color + opacity + ')';
+      ctx.fill();
+
+      ctx.restore();
+    }
 
     function animate() {
       if (!ctx || !canvas) return;
@@ -44,10 +82,22 @@ export default function ParticleBackground() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle) => {
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = goldColor + particle.opacity + ')';
-        ctx.fill();
+        if (particle.type === 'petal') {
+          drawPetal(
+            particle.x,
+            particle.y,
+            particle.size,
+            particle.rotation,
+            particle.color,
+            particle.opacity
+          );
+          particle.rotation += particle.rotationSpeed;
+        } else {
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          ctx.fillStyle = particle.color + particle.opacity + ')';
+          ctx.fill();
+        }
 
         particle.x += particle.speedX;
         particle.y += particle.speedY;
