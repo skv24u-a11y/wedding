@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import FloatingCTA from './components/FloatingCTA';
 import Home from './pages/Home';
-import About from './pages/About';
 import Portfolio from './pages/Portfolio';
+import Packages from './pages/Packages';
 import Contact from './pages/Contact';
-import WeddingPhotography from './pages/services/WeddingPhotography';
-import PreWedding from './pages/services/PreWedding';
-import BabyShower from './pages/services/BabyShower';
-import CorporateEvents from './pages/services/CorporateEvents';
-import CustomQuotes from './pages/services/CustomQuotes';
 
 // Scroll to top component
 function ScrollToTop() {
@@ -45,24 +41,21 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow pt-20">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/services/wedding" element={<WeddingPhotography />} />
-            <Route path="/services/pre-wedding" element={<PreWedding />} />
-            <Route path="/services/baby-shower" element={<BabyShower />} />
-            <Route path="/services/corporate" element={<CorporateEvents />} />
-            <Route path="/services/quotes" element={<CustomQuotes />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <ThemeProvider>
+        <ScrollToTop />
+        <div className="min-h-screen flex flex-col bg-white dark:bg-[#0A0A0A] transition-colors">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/packages" element={<Packages />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </main>
+          <FloatingCTA />
+        </div>
+      </ThemeProvider>
     </Router>
   );
 }

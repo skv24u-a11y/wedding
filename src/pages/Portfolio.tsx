@@ -1,144 +1,217 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Heart, Music, Building, Users, Image } from 'lucide-react';
-import Masonry from 'react-masonry-css';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import Lightbox from '../components/Lightbox';
 
-const Portfolio = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+type Category = 'all' | 'weddings' | 'elopements' | 'engagements' | 'destination';
+
+interface PortfolioImage {
+  id: number;
+  url: string;
+  couple: string;
+  location: string;
+  category: Category;
+}
+
+const portfolioImages: PortfolioImage[] = [
+  {
+    id: 1,
+    url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80',
+    couple: 'Sarah & James',
+    location: 'Sydney Opera House',
+    category: 'weddings',
+  },
+  {
+    id: 2,
+    url: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=800&q=80',
+    couple: 'Emma & David',
+    location: 'Byron Bay Beach',
+    category: 'destination',
+  },
+  {
+    id: 3,
+    url: 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800&q=80',
+    couple: 'Olivia & Michael',
+    location: 'Melbourne Gardens',
+    category: 'engagements',
+  },
+  {
+    id: 4,
+    url: 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80',
+    couple: 'Sophie & William',
+    location: 'Gold Coast Hinterland',
+    category: 'elopements',
+  },
+  {
+    id: 5,
+    url: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&q=80',
+    couple: 'Isabella & Alexander',
+    location: 'Perth Sunset',
+    category: 'weddings',
+  },
+  {
+    id: 6,
+    url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=800&q=80',
+    couple: 'Chloe & Benjamin',
+    location: 'Adelaide Hills',
+    category: 'engagements',
+  },
+  {
+    id: 7,
+    url: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80',
+    couple: 'Ava & Lucas',
+    location: 'Brisbane Botanical',
+    category: 'weddings',
+  },
+  {
+    id: 8,
+    url: 'https://images.unsplash.com/photo-1529636798458-92182e662485?w=800&q=80',
+    couple: 'Mia & Noah',
+    location: 'Hobart Waterfront',
+    category: 'destination',
+  },
+  {
+    id: 9,
+    url: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800&q=80',
+    couple: 'Charlotte & Liam',
+    location: 'Blue Mountains',
+    category: 'elopements',
+  },
+  {
+    id: 10,
+    url: 'https://images.unsplash.com/photo-1600367407229-943bec430b83?w=800&q=80',
+    couple: 'Amelia & Ethan',
+    location: 'Cairns Beach',
+    category: 'destination',
+  },
+  {
+    id: 11,
+    url: 'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800&q=80',
+    couple: 'Harper & Mason',
+    location: 'Sydney Harbour',
+    category: 'engagements',
+  },
+  {
+    id: 12,
+    url: 'https://images.unsplash.com/photo-1525258428416-6a4f7024b05e?w=800&q=80',
+    couple: 'Ella & Jack',
+    location: 'Yarra Valley',
+    category: 'weddings',
+  },
+];
+
+export default function Portfolio() {
+  const [selectedCategory, setSelectedCategory] = useState<Category>('all');
+  const [selectedImage, setSelectedImage] = useState<PortfolioImage | null>(null);
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   const categories = [
-    { id: 'all', name: 'All', icon: Camera },
-    { id: 'wedding', name: 'Wedding', icon: Heart },
-    { id: 'live-concert', name: 'Live Concert', icon: Music },
-    { id: 'corporate', name: 'Corporate Event', icon: Building },
-    { id: 'pre-wedding', name: 'Pre Wedding', icon: Users },
-    { id: 'custom', name: 'Custom Photoshoot', icon: Image }
+    { id: 'all' as Category, name: 'All' },
+    { id: 'weddings' as Category, name: 'Weddings' },
+    { id: 'elopements' as Category, name: 'Elopements' },
+    { id: 'engagements' as Category, name: 'Engagements' },
+    { id: 'destination' as Category, name: 'Destination' },
   ];
 
-  const allImages = [
-    "https://i.ibb.co/7dvTVnww/Whats-App-Image-2025-04-03-at-22-24-14-1.jpg",
-    "https://i.ibb.co/4nRXt7kL/Whats-App-Image-2025-04-03-at-22-24-14-2.jpg",
-    "https://i.ibb.co/G3s8CtdP/Whats-App-Image-2025-04-03-at-22-24-14.jpg",
-    "https://i.ibb.co/4gm1ZBMy/Whats-App-Image-2025-04-03-at-22-25-42-1.jpg",
-    "https://i.ibb.co/XkKRvsDT/Whats-App-Image-2025-04-03-at-22-25-42-2.jpg",
-    "https://i.ibb.co/F4bHhmbk/Whats-App-Image-2025-04-03-at-22-25-42.jpg",
-    "https://i.ibb.co/PZ3yfc1G/Whats-App-Image-2025-04-03-at-22-25-43-1.jpg",
-    "https://i.ibb.co/27wxv6yM/Whats-App-Image-2025-04-03-at-22-25-43-2.jpg",
-    "https://i.ibb.co/CKYT6vwb/Whats-App-Image-2025-04-03-at-22-25-43.jpg",
-    "https://i.ibb.co/Z6VVjxvs/Whats-App-Image-2025-04-03-at-22-25-44-1.jpg",
-    "https://i.ibb.co/tM3BTtN3/Whats-App-Image-2025-04-03-at-22-25-44-2.jpg",
-    "https://i.ibb.co/GQ2LmbSs/Whats-App-Image-2025-04-03-at-22-25-44.jpg",
-    "https://i.ibb.co/5Xjb8JYv/Whats-App-Image-2025-04-03-at-22-25-45-1.jpg",
-    "https://i.ibb.co/23F6qFLv/Whats-App-Image-2025-04-03-at-22-25-45-2.jpg",
-    "https://i.ibb.co/DHnV941M/Whats-App-Image-2025-04-03-at-22-25-45-3.jpg",
-    "https://i.ibb.co/yc1cLdQx/Whats-App-Image-2025-04-03-at-22-25-45.jpg",
-    "https://i.ibb.co/DfGyzvQY/Whats-App-Image-2025-04-03-at-22-25-46-1.jpg",
-    "https://i.ibb.co/nsRd558F/Whats-App-Image-2025-04-03-at-22-25-46-2.jpg",
-    "https://i.ibb.co/G4prZhxh/Whats-App-Image-2025-04-03-at-22-25-46.jpg",
-    "https://i.ibb.co/4ZK78xPZ/Whats-App-Image-2025-04-03-at-22-25-47-1.jpg",
-    "https://i.ibb.co/HfFd10dd/Whats-App-Image-2025-04-03-at-22-25-47-2.jpg",
-    "https://i.ibb.co/q3fr2kMH/Whats-App-Image-2025-04-03-at-22-25-47.jpg",
-    "https://i.ibb.co/vxkf0sPq/Whats-App-Image-2025-04-03-at-22-27-12.jpg",
-    "https://i.ibb.co/4ZHGpQ7D/Whats-App-Image-2025-04-03-at-22-27-13-1.jpg",
-    "https://i.ibb.co/G4wtfcgP/Whats-App-Image-2025-04-03-at-22-27-13.jpg",
-    "https://i.ibb.co/TGtRrqf/Whats-App-Image-2025-04-03-at-22-27-14-1.jpg",
-    "https://i.ibb.co/GQzBv5Dc/Whats-App-Image-2025-04-03-at-22-27-14-2.jpg",
-    "https://i.ibb.co/BHXZMJhV/Whats-App-Image-2025-04-03-at-22-27-14.jpg",
-    "https://i.ibb.co/Mk99D2sX/Whats-App-Image-2025-04-03-at-22-27-15-1.jpg",
-    "https://i.ibb.co/Xr4SkRsx/Whats-App-Image-2025-04-03-at-22-27-15-2.jpg",
-    "https://i.ibb.co/qLN4pVYk/Whats-App-Image-2025-04-03-at-22-27-15.jpg",
-    "https://i.ibb.co/TDVjJZjT/Whats-App-Image-2025-04-03-at-22-27-16-1.jpg",
-    "https://i.ibb.co/7JPQ1rbd/Whats-App-Image-2025-04-03-at-22-27-16-2.jpg",
-    "https://i.ibb.co/Pv4xg1JS/Whats-App-Image-2025-04-03-at-22-27-16.jpg",
-    "https://i.ibb.co/B575wV4h/Whats-App-Image-2025-04-03-at-22-27-17-1.jpg",
-    "https://i.ibb.co/dsD9Kg3s/Whats-App-Image-2025-04-03-at-22-27-17-2.jpg",
-    "https://i.ibb.co/NdcqT9h4/Whats-App-Image-2025-04-03-at-22-27-17.jpg",
-    "https://i.ibb.co/pr4zPQS9/Whats-App-Image-2025-04-03-at-22-27-18-1.jpg",
-    "https://i.ibb.co/2QpdtWc/Whats-App-Image-2025-04-03-at-22-27-18.jpg",
-    "https://i.ibb.co/LXxZcLhq/Whats-App-Image-2025-04-03-at-22-27-19.jpg",
-    "https://i.ibb.co/jvx9zPj5/Whats-App-Image-2025-04-03-at-22-47-01.jpg",
-    "https://i.ibb.co/C3vCyPJ2/Whats-App-Image-2025-04-03-at-22-47-03.jpg",
-    "https://i.ibb.co/9mD28x8m/Whats-App-Image-2025-04-03-at-22-47-04.jpg",
-    "https://i.ibb.co/xS3JLYXR/Whats-App-Image-2025-04-03-at-22-47-06-1.jpg",
-    "https://i.ibb.co/HLvWm2VV/Whats-App-Image-2025-04-03-at-22-47-06.jpg",
-    "https://i.ibb.co/XhkrxTC/Whats-App-Image-2025-04-03-at-22-47-07.jpg",
-    "https://i.ibb.co/SFCWs29/Whats-App-Image-2025-04-03-at-22-52-45-1.jpg",
-    "https://i.ibb.co/ks3vSvWR/Whats-App-Image-2025-04-03-at-22-52-45-2.jpg",
-    "https://i.ibb.co/zTMnMHFx/Whats-App-Image-2025-04-03-at-22-52-45-3.jpg",
-    "https://i.ibb.co/xtCQkB0m/Whats-App-Image-2025-04-03-at-22-52-45-4.jpg",
-    "https://i.ibb.co/93WtfBJ9/Whats-App-Image-2025-04-03-at-22-52-45-5.jpg",
-    "https://i.ibb.co/m5zwNgM6/Whats-App-Image-2025-04-03-at-22-52-45-6.jpg",
-    "https://i.ibb.co/YzJqVjr/Whats-App-Image-2025-04-03-at-22-52-45-7.jpg",
-    "https://i.ibb.co/CsXcg7XX/Whats-App-Image-2025-04-03-at-22-52-45-8.jpg",
-    "https://i.ibb.co/nNTzqym5/Whats-App-Image-2025-04-03-at-22-52-45.jpg",
-    "https://i.ibb.co/9HZJ372N/Whats-App-Image-2025-04-03-at-22-52-46-1.jpg",
-    "https://i.ibb.co/qFcpjQtW/Whats-App-Image-2025-04-03-at-22-52-46.jpg"
-  ];
+  const filteredImages =
+    selectedCategory === 'all'
+      ? portfolioImages
+      : portfolioImages.filter((img) => img.category === selectedCategory);
 
-  const breakpointColumns = {
-    default: 4,
-    1100: 3,
-    700: 2,
-    500: 1
+  const handleNextImage = () => {
+    if (!selectedImage) return;
+    const currentIndex = filteredImages.findIndex((img) => img.id === selectedImage.id);
+    const nextIndex = (currentIndex + 1) % filteredImages.length;
+    setSelectedImage(filteredImages[nextIndex]);
+  };
+
+  const handlePrevImage = () => {
+    if (!selectedImage) return;
+    const currentIndex = filteredImages.findIndex((img) => img.id === selectedImage.id);
+    const prevIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+    setSelectedImage(filteredImages[prevIndex]);
   };
 
   return (
-    <div className="min-h-screen bg-champagne dark:bg-slate">
-      {/* Compact Header */}
-      <div className="py-8 bg-gradient-to-r from-primary to-accent text-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center">Our Portfolio</h1>
+    <div className="min-h-screen bg-[#0A0A0A] dark:bg-[#0A0A0A] pt-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-12"
+        >
+          <h1 className="font-['Playfair_Display'] text-5xl md:text-7xl font-bold text-white mb-6">
+            Our Portfolio
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            A collection of our finest work capturing love stories across Australia
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-4 mb-16"
+        >
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${
+                selectedCategory === category.id
+                  ? 'bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-white shadow-lg shadow-[#C9A96E]/30'
+                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </motion.div>
+
+        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredImages.map((image, index) => (
+            <motion.div
+              key={image.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="group relative aspect-[4/5] overflow-hidden rounded-2xl cursor-pointer"
+              style={{ perspective: '1000px' }}
+              onClick={() => setSelectedImage(image)}
+            >
+              <div className="w-full h-full transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-1">
+                <img
+                  src={image.url}
+                  alt={`${image.couple} - ${image.location}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-white text-2xl font-['Playfair_Display'] font-bold mb-1">
+                    {image.couple}
+                  </h3>
+                  <p className="text-[#C9A96E] text-sm">{image.location}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
-      {/* Gallery */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Masonry
-              breakpointCols={breakpointColumns}
-              className="flex -ml-4 w-auto"
-              columnClassName="pl-4 bg-transparent"
-            >
-              {allImages.map((image, index) => (
-                <motion.div
-                  key={image}
-                  className="mb-4 relative group cursor-zoom-in"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ scale: 1.02 }}
-                  onClick={() => window.open(image, '_blank')}
-                >
-                  <div className="relative overflow-hidden rounded-lg shadow-lg">
-                    <img
-                      src={image}
-                      alt={`Portfolio image ${index + 1}`}
-                      className="w-full h-auto transform transition-transform duration-500 hover:scale-110"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="text-white text-lg font-semibold px-4 py-2 rounded-full bg-black/50 backdrop-blur-sm">
-                        View Full Size
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </Masonry>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+      <Lightbox
+        image={selectedImage}
+        onClose={() => setSelectedImage(null)}
+        onNext={handleNextImage}
+        onPrev={handlePrevImage}
+      />
     </div>
   );
-};
-
-export default Portfolio;
+}
