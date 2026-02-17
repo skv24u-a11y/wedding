@@ -83,34 +83,6 @@ export default function Hero() {
             </button>
           </motion.div>
         </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 w-full max-w-5xl px-6"
-        >
-          <div className="bg-warm-glass rounded-2xl p-8 shadow-2xl">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
-              <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#D4A843] mb-2 font-['Cormorant_Garamond']">350+</div>
-                <div className="text-sm text-[#C4A882] tracking-wider uppercase font-['Montserrat']">Celebrations</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#D4A843] mb-2 font-['Cormorant_Garamond']">12</div>
-                <div className="text-sm text-[#C4A882] tracking-wider uppercase font-['Montserrat']">Years</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-[#D4A843] mb-2 font-['Cormorant_Garamond']">5-Star</div>
-                <div className="text-sm text-[#C4A882] tracking-wider uppercase font-['Montserrat']">Rated</div>
-              </div>
-              <div className="text-center col-span-2 md:col-span-1">
-                <div className="text-3xl md:text-4xl font-bold text-[#D4A843] mb-2 font-['Cormorant_Garamond']">Worldwide</div>
-                <div className="text-sm text-[#C4A882] tracking-wider uppercase font-['Montserrat']">Destinations</div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
