@@ -55,19 +55,30 @@ export default function PackagesSection() {
   });
 
   return (
-    <section ref={ref} className="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-[#0A0A0A] dark:to-[#1A1A1A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={ref} className="py-32 bg-gradient-to-b from-[#0D0A07] to-[#1A1208]">
+      <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-[#1A1410] dark:text-white mb-4">
-            Investment Packages
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6 }}
+            className="inline-block px-6 py-2 bg-[#D4A843]/10 border border-[#D4A843]/30 rounded-full text-[#D4A843] text-sm tracking-[0.3em] uppercase font-['Montserrat'] font-medium mb-6"
+          >
+            Packages
+          </motion.span>
+
+          <h2 className="font-['Cormorant_Garamond'] text-5xl md:text-7xl font-bold text-[#F5ECD7] mb-6">
+            Investment in Forever
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Choose the perfect package for your unforgettable day
+          <p className="text-xl text-[#C4A882] max-w-3xl mx-auto leading-relaxed">
+            Choose the perfect package for your unforgettable day.
+            <br />
+            <span className="text-[#D4A843]">Your memories deserve nothing less than perfection.</span>
           </p>
         </motion.div>
 
@@ -83,51 +94,45 @@ export default function PackagesSection() {
               }`}
             >
               <div
-                className={`relative bg-[#F5F0E8] dark:bg-white/5 backdrop-blur-xl border ${
-                  pkg.popular
-                    ? 'border-[#C9A96E] shadow-2xl shadow-[#C9A96E]/20'
-                    : 'border-gray-200 dark:border-white/10'
-                } rounded-3xl p-8 transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
-                  pkg.popular ? 'hover:shadow-[#C9A96E]/30' : ''
-                } overflow-hidden`}
-                style={{
-                  backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M20 20c0-5.523 4.477-10 10-10V0C13.431 0 0 13.431 0 30h10c0-5.523 4.477-10 10-10z\' fill=\'%23C9A96E\' fill-opacity=\'0.04\'/%3E%3C/svg%3E")',
-                }}
+                className={`relative bg-warm-glass rounded-3xl p-10 transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
+                  pkg.popular ? 'border-[#D4A843] shadow-2xl shadow-[#D4A843]/20 hover:shadow-[#D4A843]/30' : 'hover:border-[#D4A843]/30'
+                } overflow-hidden group`}
               >
                 {pkg.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-white px-6 py-2 rounded-full text-sm font-semibold flex items-center gap-2 shadow-lg">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#D4A843] to-[#E8721C] text-[#0D0A07] px-6 py-2.5 rounded-full text-sm font-bold tracking-wider uppercase flex items-center gap-2 shadow-lg shadow-[#D4A843]/40 font-['Montserrat']">
                     <Sparkles className="w-4 h-4" />
                     Most Popular
                   </div>
                 )}
 
-                <div className="text-center mb-8">
-                  <h3 className="font-['Playfair_Display'] text-3xl font-bold text-[#1A1410] dark:text-white mb-2">
+                <div className="text-center mb-10">
+                  <h3 className="font-['Cormorant_Garamond'] text-4xl font-bold text-[#F5ECD7] mb-4">
                     {pkg.name}
                   </h3>
-                  <div className="text-5xl font-bold text-[#C9A96E] mb-4">
+                  <div className="text-6xl font-bold text-[#D4A843] mb-2 font-['Cormorant_Garamond']">
                     {pkg.price}
                   </div>
+                  <div className="w-16 h-px bg-[#D4A843]/40 mx-auto mt-6" />
                 </div>
 
-                <ul className="space-y-4 mb-8">
+                <ul className="space-y-5 mb-10">
                   {pkg.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                      <Check className="w-5 h-5 text-[#C9A96E] flex-shrink-0 mt-0.5" />
-                      <span>{feature}</span>
+                    <li key={i} className="flex items-start gap-3 text-[#C4A882] group-hover:text-[#F5ECD7] transition-colors duration-300">
+                      <Check className="w-5 h-5 text-[#D4A843] flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform duration-300" />
+                      <span className="font-['Montserrat'] text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
 
                 <Link
                   to="/contact"
-                  className={`block w-full py-4 rounded-full text-center font-semibold transition-all duration-300 ${
+                  className={`block w-full py-4 rounded-full text-center font-bold tracking-wider uppercase text-sm transition-all duration-300 font-['Montserrat'] ${
                     pkg.popular
-                      ? 'bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-[#1A1410] hover:shadow-lg hover:shadow-[#C9A96E]/50 hover:scale-105'
-                      : 'bg-gray-200 dark:bg-white/10 text-[#1A1410] dark:text-white border border-gray-300 dark:border-white/20 hover:bg-gray-300 dark:hover:bg-white/20'
+                      ? 'bg-gradient-to-r from-[#D4A843] to-[#E8721C] text-[#0D0A07] hover:shadow-lg hover:shadow-[#D4A843]/50 hover:scale-105'
+                      : 'bg-[#D4A843]/10 text-[#D4A843] border border-[#D4A843]/30 hover:bg-[#D4A843]/20 hover:border-[#D4A843]/50'
                   }`}
                 >
-                  Book This Package
+                  Reserve Now
                 </Link>
               </div>
             </motion.div>
@@ -138,16 +143,19 @@ export default function PackagesSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mt-12"
+          className="text-center mt-16"
         >
-          <p className="text-gray-400 mb-4">
+          <p className="text-[#C4A882] mb-5 text-lg">
             Need something custom? We create bespoke packages tailored to your vision.
           </p>
           <Link
             to="/contact"
-            className="inline-block text-[#C9A96E] hover:text-[#D4A5A5] font-semibold transition-colors"
+            className="inline-flex items-center gap-2 text-[#D4A843] hover:text-[#E8721C] font-semibold transition-colors font-['Montserrat'] tracking-wider uppercase text-sm"
           >
-            Request Custom Quote →
+            Request Custom Quote
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </Link>
         </motion.div>
       </div>

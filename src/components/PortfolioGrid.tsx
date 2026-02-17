@@ -87,39 +87,44 @@ export default function PortfolioGrid({ onImageClick }: PortfolioGridProps) {
   };
 
   return (
-    <section id="portfolio" ref={ref} className="py-20 bg-white dark:bg-[#0A0A0A]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="portfolio" ref={ref} className="py-32 bg-gradient-to-b from-[#0D0A07] to-[#1A1208]">
+      <div className="container mx-auto px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="font-['Playfair_Display'] text-4xl md:text-6xl font-bold text-[#1A1410] dark:text-white mb-4">
-            Our Portfolio
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6 }}
+            className="inline-block px-6 py-2 bg-[#D4A843]/10 border border-[#D4A843]/30 rounded-full text-[#D4A843] text-sm tracking-[0.3em] uppercase font-['Montserrat'] font-medium mb-6"
+          >
+            Our Work
+          </motion.span>
+
+          <h2 className="font-['Cormorant_Garamond'] text-5xl md:text-7xl font-bold text-[#F5ECD7] mb-6">
+            Moments That Matter
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Every frame tells a story of love, laughter, and unforgettable moments
+          <p className="text-xl text-[#C4A882] max-w-3xl mx-auto leading-relaxed">
+            Every frame tells a story of love, laughter, and unforgettable moments.
+            <br />
+            <span className="text-[#D4A843]">These are the memories that last forever.</span>
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[300px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[300px]">
           {portfolioImages.map((image, index) => (
             <motion.div
               key={image.id}
               initial={{ opacity: 0, y: 30 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className={`${sizeClasses[image.size]} group relative overflow-hidden rounded-2xl cursor-pointer`}
-              style={{ perspective: '1000px' }}
+              className={`${sizeClasses[image.size]} group relative overflow-hidden rounded-xl cursor-pointer border border-[#D4A843]/10 hover:border-[#D4A843]/30 transition-all duration-500`}
               onClick={() => onImageClick(image)}
             >
-              <div
-                className="w-full h-full transition-transform duration-500 ease-out group-hover:scale-110 group-hover:rotate-2"
-                style={{
-                  transformStyle: 'preserve-3d',
-                }}
-              >
+              <div className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-110">
                 <img
                   src={image.url}
                   alt={`${image.couple} - ${image.location}`}
@@ -128,13 +133,22 @@ export default function PortfolioGrid({ onImageClick }: PortfolioGridProps) {
                 />
               </div>
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white text-2xl font-['Playfair_Display'] font-bold mb-1">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D0A07] via-[#0D0A07]/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-8">
+                <div className="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
+                  <h3 className="text-[#F5ECD7] text-3xl font-['Cormorant_Garamond'] font-bold mb-2">
                     {image.couple}
                   </h3>
-                  <p className="text-[#C9A96E] text-sm">{image.location}</p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-px bg-[#D4A843]" />
+                    <p className="text-[#D4A843] text-sm tracking-wider uppercase font-['Montserrat']">{image.location}</p>
+                  </div>
                 </div>
+              </div>
+
+              <div className="absolute top-4 right-4 w-12 h-12 bg-[#D4A843]/0 group-hover:bg-[#D4A843]/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 border border-[#D4A843]/0 group-hover:border-[#D4A843]/50">
+                <svg className="w-6 h-6 text-[#D4A843]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                </svg>
               </div>
             </motion.div>
           ))}

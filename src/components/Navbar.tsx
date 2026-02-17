@@ -1,29 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Sun, Moon, Phone } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
   const { scrollY } = useScroll();
   const location = useLocation();
 
   const backgroundColor = useTransform(
     scrollY,
     [0, 100],
-    theme === 'dark'
-      ? ['rgba(10, 10, 10, 0)', 'rgba(10, 10, 10, 0.98)']
-      : ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.98)']
+    ['rgba(13, 10, 7, 0)', 'rgba(26, 18, 8, 0.95)']
   );
 
   const boxShadow = useTransform(
     scrollY,
     [0, 100],
-    theme === 'dark'
-      ? ['0 0 0 rgba(0,0,0,0)', '0 2px 20px rgba(0,0,0,0.3)']
-      : ['0 0 0 rgba(0,0,0,0)', '0 2px 20px rgba(0,0,0,0.08)']
+    ['0 0 0 rgba(0,0,0,0)', '0 4px 30px rgba(212, 168, 67, 0.1)']
   );
 
   useEffect(() => {
@@ -47,11 +41,10 @@ export default function Navbar() {
   return (
     <motion.nav
       style={{ backgroundColor, boxShadow }}
-      className="fixed w-full z-50 backdrop-blur-xl"
+      className="fixed w-full z-50 backdrop-blur-xl border-b border-[#D4A843]/10"
     >
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="flex justify-between items-center h-24">
           <Link
             to="/"
             onClick={() => window.scrollTo(0, 0)}
@@ -60,78 +53,58 @@ export default function Navbar() {
             <motion.img
               src="https://i.ibb.co/S4hwn689/logo.png"
               alt="VAV Films"
-              className="h-12 w-12 object-contain"
-              whileHover={{ scale: 1.05 }}
+              className="h-14 w-14 object-contain"
+              whileHover={{ rotate: 360 }}
+              transition={{ duration: 0.6 }}
             />
             <div className="flex flex-col">
-              <span className="font-['Playfair_Display'] text-2xl font-bold text-[#1A1410] dark:text-white">
-                VAV Films
+              <span className="font-['Cormorant_Garamond'] text-3xl font-bold text-[#F5ECD7] tracking-wider">
+                VAV FILMS
               </span>
-              <span className="text-xs text-[#C9A96E] tracking-widest">
-                PRODUCTION
+              <span className="text-[10px] text-[#D4A843] tracking-[0.35em] uppercase font-['Montserrat']">
+                Cinematic Storytelling
               </span>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 onClick={() => window.scrollTo(0, 0)}
-                className={`relative text-[#1A1410] dark:text-white font-medium transition-colors hover:text-[#C9A96E] ${
-                  location.pathname === link.path ? 'text-[#C9A96E]' : ''
-                }`}
+                className="relative group"
               >
-                {link.name}
+                <span className={`text-sm font-medium tracking-wider uppercase transition-colors duration-300 font-['Montserrat'] ${
+                  location.pathname === link.path ? 'text-[#D4A843]' : 'text-[#F5ECD7] hover:text-[#D4A843]'
+                }`}>
+                  {link.name}
+                </span>
                 {location.pathname === link.path && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C9A96E]"
+                    className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-[#D4A843] to-[#E8721C]"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
               </Link>
             ))}
 
             <a
-              href="tel:+61412345678"
-              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-[#1A1410] font-semibold rounded-full hover:scale-105 transition-transform shadow-lg"
+              href="tel:+919876543210"
+              className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-[#D4A843] to-[#E8721C] text-[#0D0A07] font-semibold tracking-wider uppercase text-sm rounded-full hover:shadow-lg hover:shadow-[#D4A843]/50 transition-all duration-300 transform hover:scale-105 font-['Montserrat']"
             >
               <Phone className="w-4 h-4" />
               Book Your Date
             </a>
-
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E] transition-colors rounded-full hover:bg-black/5 dark:hover:bg-white/10"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
           </div>
 
-          <div className="md:hidden flex items-center gap-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E] transition-colors"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
-
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-[#1A1410] dark:text-white"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 text-[#F5ECD7] hover:text-[#D4A843] transition-colors"
+          >
+            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          </button>
         </div>
       </div>
 
@@ -144,7 +117,7 @@ export default function Navbar() {
             className="fixed inset-0 z-50 md:hidden"
           >
             <motion.div
-              className="absolute inset-0 bg-black/50"
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
               onClick={() => setIsOpen(false)}
             />
 
@@ -153,15 +126,15 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="absolute inset-y-0 right-0 w-full max-w-sm bg-white dark:bg-[#0A0A0A]"
+              className="absolute inset-y-0 right-0 w-full max-w-sm bg-[#1A1208] border-l border-[#D4A843]/20"
             >
-              <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-white/10">
-                <span className="font-['Playfair_Display'] text-xl font-bold text-[#1A1410] dark:text-white">
+              <div className="flex items-center justify-between p-6 border-b border-[#D4A843]/20">
+                <span className="font-['Cormorant_Garamond'] text-2xl font-bold text-[#F5ECD7]">
                   Menu
                 </span>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-2 text-[#1A1410] dark:text-white hover:text-[#C9A96E]"
+                  className="p-2 text-[#F5ECD7] hover:text-[#D4A843] transition-colors"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -176,10 +149,10 @@ export default function Navbar() {
                       setIsOpen(false);
                       window.scrollTo(0, 0);
                     }}
-                    className={`block text-xl font-medium transition-colors ${
+                    className={`block text-xl font-medium tracking-wider uppercase transition-colors font-['Montserrat'] ${
                       location.pathname === link.path
-                        ? 'text-[#C9A96E]'
-                        : 'text-[#1A1410] dark:text-white hover:text-[#C9A96E]'
+                        ? 'text-[#D4A843]'
+                        : 'text-[#F5ECD7] hover:text-[#D4A843]'
                     }`}
                   >
                     {link.name}
@@ -187,8 +160,8 @@ export default function Navbar() {
                 ))}
 
                 <a
-                  href="tel:+61412345678"
-                  className="flex items-center justify-center gap-2 w-full px-6 py-4 bg-gradient-to-r from-[#C9A96E] to-[#D4A5A5] text-[#1A1410] font-semibold rounded-full mt-8 shadow-lg"
+                  href="tel:+919876543210"
+                  className="flex items-center justify-center gap-2 w-full px-6 py-4 bg-gradient-to-r from-[#D4A843] to-[#E8721C] text-[#0D0A07] font-semibold tracking-wider uppercase rounded-full mt-8 shadow-lg shadow-[#D4A843]/30 font-['Montserrat']"
                 >
                   <Phone className="w-5 h-5" />
                   Book Your Date

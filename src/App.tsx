@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { ThemeProvider } from './contexts/ThemeContext';
 import Navbar from './components/Navbar';
 import FloatingCTA from './components/FloatingCTA';
+import Footer from './components/Footer';
 import IndianWeddingLoader from './components/IndianWeddingLoader';
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
@@ -26,7 +27,7 @@ function App() {
       <ThemeProvider>
         <IndianWeddingLoader />
         <ScrollToTop />
-        <div className="min-h-screen flex flex-col bg-white dark:bg-[#0A0A0A] transition-colors">
+        <div className="min-h-screen flex flex-col bg-[#0D0A07] transition-colors">
           <Navbar />
           <main className="flex-grow">
             <Routes>
@@ -36,6 +37,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
             </Routes>
           </main>
+          <Footer />
           <FloatingCTA />
         </div>
       </ThemeProvider>
